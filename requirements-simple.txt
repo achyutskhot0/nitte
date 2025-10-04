@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+python-multipart
+PyPDF2
+docx2txt
+requests
+scikit-learn
+joblib
+torch
+spacy
+datasets
+setfit
+pyyaml
+icalendar

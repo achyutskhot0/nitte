@@ -51,19 +51,18 @@ source venv/bin/activate
 
 3. Install dependencies:
 ```bash
-# Option 1: Use the installation script (recommended)
-python install.py
+# Option 1: Use the simple setup script (recommended)
+python setup.py
 
-# Option 2: Use the minimal requirements
-pip install -r requirements-minimal.txt
+# Option 2: Use the simple requirements file
+pip install -r requirements-simple.txt
+pip install "numpy<2.0"  # Fix version conflict
+python -m spacy download en_core_web_sm
 
-# Option 3: Install packages individually
+# Option 3: Manual installation
 pip install fastapi uvicorn python-multipart PyPDF2 docx2txt requests
 pip install scikit-learn joblib torch spacy datasets setfit pyyaml icalendar
-```
-
-4. Download spaCy model (required for NLP processing):
-```bash
+pip install "numpy<2.0"
 python -m spacy download en_core_web_sm
 ```
 

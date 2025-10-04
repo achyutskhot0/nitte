@@ -17,6 +17,7 @@ def run_command(command, description):
     except subprocess.CalledProcessError as e:
         print(f"❌ {description} failed:")
         print(f"Error: {e.stderr}")
+        print(f"Command: {command}")
         return False
 
 def check_python_version():
@@ -31,54 +32,54 @@ def check_python_version():
 def install_core_packages():
     """Install core packages first"""
     core_packages = [
-        "fastapi>=0.100.0,<0.105.0",
-        "uvicorn[standard]>=0.20.0,<0.25.0",
-        "python-multipart>=0.0.5,<0.1.0",
-        "PyPDF2>=3.0.0",
-        "docx2txt>=0.8",
-        "requests>=2.30.0,<2.32.0"
+        "fastapi",
+        "uvicorn[standard]",
+        "python-multipart",
+        "PyPDF2",
+        "docx2txt",
+        "requests"
     ]
     
     for package in core_packages:
-        if not run_command(f"pip install '{package}'", f"Installing {package}"):
+        if not run_command(f"pip install {package}", f"Installing {package}"):
             return False
     return True
 
 def install_ml_packages():
     """Install machine learning packages"""
     ml_packages = [
-        "scikit-learn>=1.3.0,<1.4.0",
-        "joblib>=1.3.0,<1.4.0",
-        "torch>=2.0.0,<2.2.0"
+        "scikit-learn",
+        "joblib",
+        "torch"
     ]
     
     for package in ml_packages:
-        if not run_command(f"pip install '{package}'", f"Installing {package}"):
+        if not run_command(f"pip install {package}", f"Installing {package}"):
             return False
     return True
 
 def install_nlp_packages():
     """Install NLP packages"""
     nlp_packages = [
-        "spacy>=3.6.0,<3.7.0",
-        "datasets>=2.14.0,<2.15.0",
-        "setfit>=1.0.0,<1.1.0"
+        "spacy",
+        "datasets",
+        "setfit"
     ]
     
     for package in nlp_packages:
-        if not run_command(f"pip install '{package}'", f"Installing {package}"):
+        if not run_command(f"pip install {package}", f"Installing {package}"):
             return False
     return True
 
 def install_utility_packages():
     """Install utility packages"""
     utility_packages = [
-        "pyyaml>=6.0.0,<7.0.0",
-        "icalendar>=5.0.0,<6.0.0"
+        "pyyaml",
+        "icalendar"
     ]
     
     for package in utility_packages:
-        if not run_command(f"pip install '{package}'", f"Installing {package}"):
+        if not run_command(f"pip install {package}", f"Installing {package}"):
             return False
     return True
 
