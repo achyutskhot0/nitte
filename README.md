@@ -15,6 +15,14 @@ docker-compose up --build
 # Open http://localhost:8000 and upload PDFs/DOCs
 ```
 
+If you skip training, the app still works using a keyword fallback classifier.
+
+Health check:
+
+```bash
+curl http://localhost:8000/health
+```
+
 ## Structure
 
 - ingest/: FastAPI upload API, multi-doc, any format

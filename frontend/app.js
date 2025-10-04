@@ -26,6 +26,7 @@ async function loadSummary(fid){
   const res = await fetch(API + "/summaries/" + fid, { method: 'POST' });
   const data = await res.json();
   window.data = data;
+  window.data._fid = fid;
   switchTab('lawyer');
 }
 
@@ -34,7 +35,10 @@ function loadTab(t){
   if(!window.data){ box.innerHTML = '<em>Upload a document to see results.</em>'; return; }
   if(t==='lawyer') box.innerHTML = `<pre>${JSON.stringify(window.data.lawyer, null, 2)}</pre>`;
   if(t==='citizen') box.innerHTML = `<pre>${JSON.stringify(window.data.citizen, null, 2)}</pre>`;
-  if(t==='next') box.innerHTML = `<pre>${JSON.stringify(window.data.next, null, 2)}</pre>`;
+  if(t==='next') box.innerHTML = `<div style="display:flex;gap:1rem;align-items:flex-start;">
+    <pre style="flex:1;">${JSON.stringify(window.data.next, null, 2)}</pre>
+    <a class="button is-link" href="${API + "/ical/" + window.data._fid}" download="deadlines.ics">Download iCal</a>
+  </div>`;
 }
 
 window.upload = upload;

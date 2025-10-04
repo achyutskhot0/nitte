@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install -r ingest/requirements-ingest.txt \
     && pip install -r classifier/requirements-clf.txt \
     && pip install -r extraction/requirements-extract.txt \
+    && pip install -r requirements.txt \
     && python -m spacy download en_core_web_sm
 
 EXPOSE 8000

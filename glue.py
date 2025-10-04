@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os, subprocess, json, io, uuid
 from PyPDF2 import PdfReader
 import docx2txt
+from nextsteps.calendar import export_ical
 
 app = FastAPI()
 
@@ -98,3 +99,25 @@ def summarize(fid: str):
         nxt = {"error": f"next steps failed: {e}"}
 
     return {"lawyer": lawyer, "citizen": citizen, "next": nxt, "facts": facts}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/ical/{fid}")
+def ical(fid: str):
+    txt_path = f"file_queue/{fid}.txt"
+    if not os.path.exists(txt_path):
+        return {"error": "file not found"}
+    # recompute next steps to get dates
+    try:
+        txt = open(txt_path, encoding="utf-8").read()
+        nxt = json.loads(
+            subprocess.check_output(["python", "nextsteps/next_steps.py"], input=txt, text=True)
+        )
+        deadlines = nxt.get("deadlines", [])
+    except Exception:
+        deadlines = []
+    ics = export_ical(deadlines)
+    from fastapi.responses import Response
+    return Response(content=ics, media_type="text/calendar")

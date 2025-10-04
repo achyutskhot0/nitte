@@ -1,7 +1,8 @@
-import spacy, yaml, re, json, sys
+import spacy, yaml, re, json, sys, os
 
 nlp = spacy.load("en_core_web_sm")
-fields = yaml.safe_load(open("/workspace/extraction/fields.yaml", encoding="utf-8"))["fields"]
+FIELDS_PATH = os.path.join(os.path.dirname(__file__), "fields.yaml")
+fields = yaml.safe_load(open(FIELDS_PATH, encoding="utf-8"))["fields"]
 
 def extract(text: str):
     data = {}

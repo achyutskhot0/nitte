@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from PyPDF2 import PdfReader
-import docx2txt, io, os, uuid
+import io, os, uuid
+import docx2txt
 
 app = FastAPI()
 UPLOAD_DIR = "file_queue"
