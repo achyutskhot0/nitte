@@ -38,20 +38,71 @@ git clone <repository-url>
 cd legal-lens
 ```
 
-2. Install dependencies:
+2. Create a virtual environment (recommended):
 ```bash
-pip install -r requirements.txt
+# On Windows
+python -m venv venv
+venv\Scripts\activate
+
+# On macOS/Linux
+python -m venv venv
+source venv/bin/activate
 ```
 
-3. Download spaCy model (required for NLP processing):
+3. Install dependencies:
+```bash
+# Option 1: Use the installation script (recommended)
+python install.py
+
+# Option 2: Use the minimal requirements
+pip install -r requirements-minimal.txt
+
+# Option 3: Install packages individually
+pip install fastapi uvicorn python-multipart PyPDF2 docx2txt requests
+pip install scikit-learn joblib torch spacy datasets setfit pyyaml icalendar
+```
+
+4. Download spaCy model (required for NLP processing):
 ```bash
 python -m spacy download en_core_web_sm
 ```
 
-4. Start the application:
+5. Start the application:
 ```bash
 python start.py
 ```
+
+### Troubleshooting Installation
+
+If you encounter dependency conflicts:
+
+1. **Use the minimal requirements file**:
+   ```bash
+   pip install -r requirements-minimal.txt
+   ```
+
+2. **Install packages individually**:
+   ```bash
+   pip install fastapi uvicorn python-multipart
+   pip install PyPDF2 docx2txt requests
+   pip install scikit-learn joblib torch
+   pip install spacy datasets setfit
+   pip install pyyaml icalendar
+   ```
+
+3. **Use conda instead of pip**:
+   ```bash
+   conda create -n legal-lens python=3.9
+   conda activate legal-lens
+   conda install -c conda-forge fastapi uvicorn scikit-learn spacy
+   pip install PyPDF2 docx2txt python-multipart requests datasets setfit pyyaml icalendar
+   ```
+
+4. **For production deployment**, consider using Docker:
+   ```bash
+   docker build -t legal-lens .
+   docker run -p 8000:8000 legal-lens
+   ```
 
 The application will be available at:
 - **Frontend**: http://localhost:8000
