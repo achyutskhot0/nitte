@@ -1,0 +1,1 @@
+Summarize the following legal document into strict JSON with keys: ["issues","arguments","precedents","outcome","risks","citations"]. Be precise and concise. Text:\n\n{{TEXT}}
