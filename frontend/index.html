@@ -1,30 +1,261 @@
 <!doctype html>
-<title>Legal Lens</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Lens - AI-Powered Legal Document Analysis</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .loading-spinner.is-active {
+            display: inline-block;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .section-content {
+            min-height: 400px;
+        }
+        .file-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .summary-section {
+            margin-bottom: 2rem;
+        }
+        .summary-section h3 {
+            color: #4a4a4a;
+            border-bottom: 2px solid #e8e8e8;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .key-value-pair {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: flex-start;
+        }
+        .key-value-pair .key {
+            font-weight: bold;
+            min-width: 120px;
+            color: #363636;
+        }
+        .key-value-pair .value {
+            flex: 1;
+            margin-left: 1rem;
+        }
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .success-message {
+            background-color: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
 <body>
-<section class="section">
-  <h1 class="title">Legal Lens – Beat IIT</h1>
-  <div class="field">
-    <div class="file has-name is-fullwidth">
-      <label class="file-label">
-        <input class="file-input" type="file" id="file" name="files" multiple>
-        <span class="file-cta">
-          <span class="file-icon">📄</span>
-          <span class="file-label">Choose files…</span>
-        </span>
-        <span class="file-name" id="file-name">No files selected</span>
-      </label>
+    <nav class="navbar hero-gradient" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item has-text-white" href="#">
+                <i class="fas fa-gavel mr-2"></i>
+                <strong>Legal Lens</strong>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <button class="button is-light" onclick="showFileManager()">
+                            <i class="fas fa-folder-open mr-1"></i>
+                            File Manager
+                        </button>
+                        <button class="button is-light" onclick="exportResults()">
+                            <i class="fas fa-download mr-1"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-4">
+                    <div class="card card-hover">
+                        <div class="card-header">
+                            <p class="card-header-title">
+                                <i class="fas fa-upload mr-2"></i>
+                                Upload Documents
+                            </p>
+                        </div>
+                        <div class="card-content">
+                            <div class="field">
+                                <div class="file has-name is-fullwidth">
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" id="file" name="files" multiple accept=".pdf,.docx,.txt">
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </span>
+                                            <span class="file-label">Choose files…</span>
+                                        </span>
+                                        <span class="file-name" id="file-name">No files selected</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div id="file-info" class="file-info" style="display: none;">
+                                <h4 class="subtitle is-6">Selected Files:</h4>
+                                <div id="file-list" class="file-list"></div>
+                            </div>
+
+                            <div class="field">
+                                <button class="button is-primary is-fullwidth" onclick="upload()" id="upload-btn">
+                                    <span class="icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span>Process Documents</span>
+                                </button>
+                            </div>
+
+                            <div id="progress-container" style="display: none;">
+                                <div class="field">
+                                    <label class="label">Processing Progress</label>
+                                    <progress class="progress is-primary" id="progress-bar" value="0" max="100">0%</progress>
+                                    <p class="help" id="progress-text">Preparing...</p>
+                                </div>
+                            </div>
+
+                            <div id="status-messages"></div>
+                        </div>
+                    </div>
+
+                    <div class="card card-hover" style="margin-top: 1rem;">
+                        <div class="card-header">
+                            <p class="card-header-title">
+                                <i class="fas fa-history mr-2"></i>
+                                Recent Files
+                            </p>
+                        </div>
+                        <div class="card-content">
+                            <div id="recent-files">
+                                <p class="has-text-grey">No recent files</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Analysis Results
+                            </p>
+                        </div>
+                        <div class="card-content">
+                            <div id="tabs" class="tabs is-boxed">
+                                <ul>
+                                    <li class="is-active">
+                                        <a onclick="switchTab('lawyer', event)">
+                                            <span class="icon"><i class="fas fa-balance-scale"></i></span>
+                                            <span>Legal Analysis</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="switchTab('citizen', event)">
+                                            <span class="icon"><i class="fas fa-user-friends"></i></span>
+                                            <span>Citizen Summary</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="switchTab('next', event)">
+                                            <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+                                            <span>Next Steps</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a onclick="switchTab('facts', event)">
+                                            <span class="icon"><i class="fas fa-search"></i></span>
+                                            <span>Key Facts</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div id="content" class="section-content">
+                                <div class="has-text-centered has-text-grey">
+                                    <i class="fas fa-file-alt fa-3x mb-4"></i>
+                                    <p>Upload a document to see analysis results</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- File Manager Modal -->
+    <div class="modal" id="file-manager-modal">
+        <div class="modal-background" onclick="hideFileManager()"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    File Manager
+                </p>
+                <button class="delete" aria-label="close" onclick="hideFileManager()"></button>
+            </header>
+            <section class="modal-card-body">
+                <div id="file-manager-content">
+                    <p>Loading files...</p>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button" onclick="hideFileManager()">Close</button>
+            </footer>
+        </div>
     </div>
-  </div>
-  <button class="button is-primary" onclick="upload()">Upload</button>
-  <div id="tabs" class="tabs is-boxed" style="margin-top:1rem;">
-    <ul>
-      <li class="is-active"><a onclick="switchTab('lawyer', event)">👨‍⚖️ Lawyer</a></li>
-      <li><a onclick="switchTab('citizen', event)">👩‍👧 Citizen</a></li>
-      <li><a onclick="switchTab('next', event)">📅 Next Steps</a></li>
-    </ul>
-  </div>
-  <div id="content"></div>
-</section>
-<script src="/static/app.js"></script>
+
+    <script src="/static/app.js"></script>
 </body>
+</html>
