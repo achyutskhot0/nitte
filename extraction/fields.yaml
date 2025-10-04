@@ -1,0 +1,7 @@
+fields:
+  - name: case_citation
+    pattern: "\b((\d{4})\s+\d+\s+[A-Z][a-z]+)\b"
+  - name: court
+    keywords: ["supreme court", "high court", "tribunal"]
+  - name: parties
+    pattern: "(?i)(appellant|respondent|petitioner|defendant)\s*:\s*([A-Z][^\n,.]{3,})"

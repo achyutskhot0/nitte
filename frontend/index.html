@@ -1,0 +1,30 @@
+<!doctype html>
+<title>Legal Lens</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<body>
+<section class="section">
+  <h1 class="title">Legal Lens – Beat IIT</h1>
+  <div class="field">
+    <div class="file has-name is-fullwidth">
+      <label class="file-label">
+        <input class="file-input" type="file" id="file" name="files" multiple>
+        <span class="file-cta">
+          <span class="file-icon">📄</span>
+          <span class="file-label">Choose files…</span>
+        </span>
+        <span class="file-name" id="file-name">No files selected</span>
+      </label>
+    </div>
+  </div>
+  <button class="button is-primary" onclick="upload()">Upload</button>
+  <div id="tabs" class="tabs is-boxed" style="margin-top:1rem;">
+    <ul>
+      <li class="is-active"><a onclick="switchTab('lawyer', event)">👨‍⚖️ Lawyer</a></li>
+      <li><a onclick="switchTab('citizen', event)">👩‍👧 Citizen</a></li>
+      <li><a onclick="switchTab('next', event)">📅 Next Steps</a></li>
+    </ul>
+  </div>
+  <div id="content"></div>
+</section>
+<script src="/static/app.js"></script>
+</body>

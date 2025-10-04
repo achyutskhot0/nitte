@@ -1,0 +1,11 @@
+# Next Steps
+
+- Deadlines:
+{% for d in deadlines %}
+  - {{ d }}
+{% endfor %}
+
+- Entities:
+{% for e, label in entities %}
+  - {{ e }} ({{ label }})
+{% endfor %}

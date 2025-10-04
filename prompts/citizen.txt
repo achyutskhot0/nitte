@@ -1,0 +1,1 @@
+Explain this legal document in simple language for a non-lawyer. Return strict JSON with keys: ["summary","key_points","what_it_means","actions","risks"]. Text:\n\n{{TEXT}}
